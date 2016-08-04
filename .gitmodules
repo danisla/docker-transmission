@@ -1,3 +1,0 @@
-[submodule "transmission"]
-	path = transmission
-	url = https://github.com/danisla/transmission.git
