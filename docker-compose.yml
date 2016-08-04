@@ -1,0 +1,53 @@
+vpn:
+  container_name: vpn
+  image: dperson/openvpn-client
+  restart: always
+  cap_add: NET_ADMIN
+  devices: 
+    - "/dev/net/tun:/dev/net/tun"
+  dns:
+    - 8.8.4.4
+    - 8.8.8.8
+  volumes:
+    - "/store/expressvpn:/vpn"
+  environment:
+    OVPN_CONFIG: /vpn/my_expressvpn_los_angeles_1_udp.ovpn
+  command: -f sg vpn -c "openvpn $OVPN_CONFIG"
+
+transmission:
+  container_name: transmission
+  build: ./transmission/
+  restart: always
+  net: "container:vpn"
+  environment:
+    USERID: 1000
+    GROUPID: 1000
+    RPC_URL: "/transmission/"
+  volumes:
+    - "/store/torrent/transmission1:/var/lib/transmission-daemon/info"
+    - "/store/torrent/complete:/var/lib/transmission-daemon/downloads"
+    - "/store/torrent/downloading:/var/lib/transmission-daemon/downloading"
+    - "/store/torrent/incomplete:/var/lib/transmission-daemon/incomplete"
+
+transmission_proxy:
+  container_name: transmission_proxy
+  build: ./proxy/
+  links:
+    - "vpn:bit"
+  ports:
+    - "8100:8100"
+  command: tcp -bind :8100 bit:9091
+
+ipcheck:
+  container_name: ipcheck
+  build: ./ipcheck/
+  net: "container:vpn"
+
+ipcheck_proxy:
+  container_name: ipcheck_proxy
+  build: ./proxy/
+  links:
+    - "vpn:bit"
+  ports:
+    - "8110:8110"
+  command: http -bind :8110 bit:80
