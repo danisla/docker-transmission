@@ -2,7 +2,7 @@ version: '2'
 
 services:
   vpn:
-    container_name: vpn
+    container_name: transmission_vpn
     image: danisla/openvpn-client:v1.0.0
     restart: always
     stop_signal: SIGKILL
@@ -35,7 +35,7 @@ services:
       - "./incomplete:/var/lib/transmission-daemon/incomplete"
 
   ipcheck:
-    container_name: ipcheck
+    container_name: transmission_ipcheck
     build: ./ipcheck/
     network_mode: "service:vpn"
 
@@ -47,6 +47,6 @@ services:
       - "transmission"
       - "ipcheck"
     ports:
-      - "8080:80"
+      - "9091:80"
     volumes:
       - "./httpd.conf:/usr/local/apache2/conf/httpd.conf"

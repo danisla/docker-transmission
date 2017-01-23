@@ -45,5 +45,5 @@ docker-compose up -d
 Open the Transmission Web UI:
 
 ```
-open http://localhost:8080
+open http://localhost:9091
 ```
