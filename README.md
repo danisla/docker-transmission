@@ -36,6 +36,13 @@ OVPN_PORT=1195
 EOF
 ```
 
+Generate a `htpasswd` file for basic auth
+
+```
+touch htpasswd
+docker run -it --rm --entrypoint=htpasswd -v ${PWD}/htpasswd:/etc/htpasswd:rw httpd:2.4 -c /etc/htpasswd $USER
+```
+
 Start the services:
 
 ```

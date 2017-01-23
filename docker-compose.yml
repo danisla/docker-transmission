@@ -50,3 +50,4 @@ services:
       - "9091:80"
     volumes:
       - "./httpd.conf:/usr/local/apache2/conf/httpd.conf"
+      - "./htpasswd:/etc/htpasswd"
